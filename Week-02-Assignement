@@ -1,0 +1,36 @@
+const fs = require('fs/promises');
+
+function delay(ms) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
+}
+
+async function readFileAndFetch(url, filePath, delayTime) {
+    await delay(delayTime);
+
+    const fileContent = await fs.readFile("a.txt", 'utf8');
+    console.log("File content:", fileContent);
+
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json(); 
+    return data;
+}
+
+async function fetching() {
+    const url = 'https://catfact.ninja/fact'; 
+    const filePath = 'example.txt'; 
+
+    try {
+        console.log("Waiting for 3 seconds before reading the file and fetching data...");
+        const fetchedData = await readFileAndFetch(url, filePath, 3000); 
+        console.log("Fetched data:", fetchedData);
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+
+fetching();
